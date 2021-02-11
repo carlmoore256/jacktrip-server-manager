@@ -7,6 +7,9 @@ Generates unlimited number of JackTrip server instances as threads, using the py
 ## Prerequisites ##
 - MacOS or Linux
 - Python 3
+- Jack https://jackaudio.org/downloads/
+- JackTrip https://ccrma.stanford.edu/software/jacktrip/
+- Jack running in background, either using qjackctl (GUI provided with Jack) or jackd (command-line)
 
 ## Installation ##
 
