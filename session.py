@@ -60,10 +60,13 @@ class Session():
     def client_label_status(self):
         client_labels = []
         for c in self.clients:
-            if c.connectionActive:
-                client_labels.append(f"✓ {c.name}")
+            if c.isActive:
+                if c.connectionActive:
+                    client_labels.append(f"✓ {c.name}")
+                else:
+                    client_labels.append(f"o {c.name}")
             else:
-                client_labels.append(f"o {c.name}")
+                client_labels.append(f"  {c.name}")
         return client_labels
 
     # get the lowest number port offset not already in use
@@ -80,7 +83,7 @@ class Session():
         allNames = self.existing_names()
         i = 1
         while newName in allNames:
-            newName = f'name ({i})'
+            newName = f'{name} ({i})'
             i += 1
         return newName
 
@@ -98,8 +101,6 @@ class Session():
         newClient = ClientPane(name, portOffset, channels, autoConnectAudio, zeroUnderrun, autoManage)
         self.clients.append(newClient)
 
-        # self.update_client_listbox() # updates list of self.clients
-
     def activate_all(self):
         for c in self.clients:
             c.run_server_thread()
@@ -116,7 +117,6 @@ class Session():
     def delete_client(self, client):
         client.kill_server_thread()
         self.clients.remove(client)
-        # del self.clients[client.name]
 
     # terminates any existing running jacktrip processes
     def terminate_jacktrip(self):

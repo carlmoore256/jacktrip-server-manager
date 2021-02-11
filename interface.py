@@ -137,7 +137,7 @@ class Interface():
                 if event == '_remove':
                     self.Session.delete_client(activeClient)
                 elif event == '_activate_all':
-                    self.Session.activate_all
+                    self.Session.activate_all()
                 elif event == '_deactivate_all':
                     self.Session.deactivate_all()
                 elif event == '_save_sess':

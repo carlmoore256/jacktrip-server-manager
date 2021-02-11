@@ -125,7 +125,6 @@ class ClientPane():
             if 'skew' in output:
                 # remember to make sure if this goes over 4 digits to term thread
                 skew = self.filter_string('skew: ', output, 4)
-                print(f'{skew} SKEW')
                 self.skew = int(skew)
 
 
