@@ -24,6 +24,7 @@ cd jacktrip-server-manager
 pip install -r requirements.txt
 ```
 
+## Using JackTrip Session Manager ##
 ### Run Session Manager
 - Run main.py
 ```bash
