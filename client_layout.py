@@ -7,17 +7,17 @@ title_col = [
 
 client_viewer_contents = [
     # [sg.Column(title_col)],
-    [sg.Text('Status:'), sg.Text('NOT CONNECTED', key='-CONNECT_STATUS-')],
-    [sg.Text('Quality:'), sg.Text('-', key='-C_QUALITY-')],
-    [sg.Text('Rating:'), sg.Text('-', size=(12,1), key='-C_QUALITY_RATING-')],
-    [sg.Text('Skew:'), sg.Text('-', key='-C_SKEW-')],
-    [sg.Text('Port Offset:'), sg.Text('', key='-C_PORT_OFS-')],
-    [sg.Text('Channels:'), sg.Text('', key='-C_NUM_CHAN-')],
-    [sg.Button('Disable', key="-CHANGE_ACTIVE-", button_color=('black', 'red'))],
-    [sg.Button('Remove', key="-DELETE_CLIENT-")],
+    [sg.Text('Status:'), sg.Text('NOT CONNECTED', key='_connect_status')],
+    [sg.Text('Quality:'), sg.Text('-', key='_quality')],
+    [sg.Text('Rating:'), sg.Text('-', size=(12,1), key='_quality_label')],
+    [sg.Text('Skew:'), sg.Text('-', key='_skew')],
+    [sg.Text('Port Offset:'), sg.Text('', key='_offset')],
+    [sg.Text('Channels:'), sg.Text('', key='_num_ch')],
+    [sg.Button('Disable', key="_change_active", button_color=('black', 'red'))],
+    [sg.Button('Remove', key="_remove")],
     #---------CONSOLE----------#
-    [sg.MLine(key='-ML1-'+sg.WRITE_ONLY_KEY, size=(40,8), autoscroll=True)],
-    [sg.Text(size=(40,1), key='-LINE-OUTPUT-')],
+    [sg.MLine(key='_console_scroll'+sg.WRITE_ONLY_KEY, size=(40,8), autoscroll=True)],
+    [sg.Text(size=(40,1), key='_console_line')],
 ]
 
 # listbox has right_click_menu parameter, implement this
@@ -26,15 +26,12 @@ client_viewer_frame = [
     [sg.Frame('[Create or select a client]',
     layout=client_viewer_contents,
     font='Any 12',
-    key="-CLIENT_FRAME-")]
+    key="_client_frame")]
 ]
 
-def reset_view(window):
-    window['-CONNECT_STATUS-'].update('-')
-    window['-C_QUALITY-'].update('-')
-    window['-C_QUALITY_RATING-'].update('-')
-    window['-C_NUM_CHAN-'].update('-')
-    window['-CHANGE_ACTIVE-'].update(button_color=('gray', 'white'))
-
-
-        # window[]
+# def reset_view(window):
+#     window['_connect_status'].update('-') 
+#     window['_quality'].update('-')
+#     window['_quality_label'].update('-')
+#     window['_num_ch'].update('-')
+#     window['_change_active'].update(button_color=('gray', 'white'))
