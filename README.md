@@ -17,12 +17,19 @@ cd jacktrip-server-manager
 
 - Install dependencies: PySimpleGui
 ```bash
-pip install PySimpleGui
+pip install -r requirements.txt
 ```
 
+### Run Session Manager
 - Run main.py
 ```bash
 python3 main.py
 ```
 
-Jacktrip is an open source, low-latency network performance tool for musicians: https://github.com/jacktrip/jacktrip
+### Saving/Loading Sessions
+- Sessions can be saved into a CSV containing the current list of clients and their respective settings. Hit "save session," choose a folder, and enter the filename
+- To load a session, select load session and select a previously saved CSV containing the session data
+
+## JackTrip and Jack
+JackTrip is an open source, low-latency network performance tool for musicians: https://github.com/jacktrip/jacktrip
+Jack Audio Connection Kit is the audio backend for JackTrip: https://github.com/jackaudio/jack2
