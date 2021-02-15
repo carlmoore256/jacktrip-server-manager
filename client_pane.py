@@ -16,6 +16,7 @@ class ClientPane():
         self.isActive = False
         self.connectionActive = False
         self.connectionChanged = False
+        # self.requestRestart = False
         self.currentOutput = ''
 
         self.connectionQuality = 1.0 # overall quality 0-1
@@ -82,11 +83,13 @@ class ClientPane():
             print(f'server terminating {self.name}, quality too low!')
 
             if self.autoManage:
-                self.requestRestart = False
+                # self.requestRestart = True
                 self.connectionActive = False
                 self.connectionQuality = 1.0 # this could eventually roll over
 
             self.kill_server_thread()
+            time.sleep(0.3)
+            self.run_server_thread()
 
     # representation of connection quality (work in progress)
     # this can determine their level in the mix (to be implemented later)
