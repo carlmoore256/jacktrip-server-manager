@@ -1,0 +1,15 @@
+TO DO
+
+- change name / rename
+- change port
+- fix disable enable
+- when client disconnects, the client is made inactive. Remove/Add problems 
+- auto route everyone to everyone else
+- figure out why there's variable latency?
+- performance issues with Dan - large NEGATIVE skews, around -20 to -30
+- clock sync between clients to improve performance
+- auto connect to all
+- tcp connection from new qjack interface
+- port number visible in scrollbox, colored bars
+- add icons for opening program
+- auto connect all channels

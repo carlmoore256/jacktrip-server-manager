@@ -34,13 +34,16 @@ class Session():
             csvreader = csv.reader(csvfile)
             # fields = next(csvreader) # get the column fields
             for row in csvreader:
-                self.create_client(
-                    name=row[0], 
-                    portOffset=int(row[1]),
-                    channels=int(row[2]),
-                    autoConnectAudio=bool(int(row[3])),
-                    zeroUnderrun=bool(int(row[4])),
-                    autoManage=bool(int(row[5])))
+                try:
+                    self.create_client(
+                        name=row[0], 
+                        portOffset=int(row[1]),
+                        channels=int(row[2]),
+                        autoConnectAudio=bool(int(row[3])),
+                        zeroUnderrun=bool(int(row[4])),
+                        autoManage=bool(int(row[5])))
+                except:
+                    print("error loading row, check formatting")
 
     # return all existing names
     def existing_names(self):
@@ -78,7 +81,7 @@ class Session():
         return port
 
     # find a new name if it already exists
-    def alternate_name(self, name):
+    def crosscheck_name(self, name):
         newName = name
         allNames = self.existing_names()
         i = 1
@@ -91,7 +94,7 @@ class Session():
     def create_client(self, name, portOffset, channels, autoConnectAudio, zeroUnderrun, autoManage):
         # check if name is already in use
         if name in self.existing_names():
-            name = self.alternate_name(name)
+            name = self.crosscheck_name(name)
 
         # if not specified, offset will be next available port
         if portOffset is None:

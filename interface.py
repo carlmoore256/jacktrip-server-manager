@@ -53,18 +53,42 @@ class Interface():
         self.window['_change_active'].update(button_color=('gray', 'white'))
 
     # updates all client labels in the listbox (left side)
-    def update_client_listboxbox(self):
+    # returns activeClient, currently selected client
+    # selectionChanged, bool indicating if client has changed from last frame
+    def update_client_listboxbox(self, values):
+        if len(values['_client_listbox']) > 0:
+            clientName = values["_client_listbox"][0][2:]
+            activeClient = self.Session.client_by_name(clientName)
+        else:
+            activeClient = None
+        
         selIndex = self.window['_client_listbox'].get_indexes()
+        prevSelectedClient = self.selectedClient
+
         if len(selIndex) > 0:
             self.selectedClient = selIndex[0]
+
         status_labels = self.Session.client_label_status()
         self.window["_client_listbox"].update(status_labels, set_to_index=self.selectedClient)
 
+        selectionChanged = False
+        if prevSelectedClient != self.selectedClient:
+            selectionChanged = True
+
+        return activeClient, selectionChanged
+
+
     # updates client information display (right side)
-    def update_client_pane(self, client, event):
-        self.window['_console_line'].update(client.currentOutput)
-        self.window['_console_scroll' + sg.WRITE_ONLY_KEY].print(f'{client.currentOutput}\n', end='')
+    def update_client_pane(self, client, event, selectionChanged):
         self.window["_client_frame"].update(client.name)
+
+        self.window['_console_line'].update(client.currentOutput)
+
+        if selectionChanged:
+            self.window['_console_scroll' + sg.WRITE_ONLY_KEY].update(value='')
+
+        self.window['_console_scroll' + sg.WRITE_ONLY_KEY].print(f'{client.currentOutput}\n', end='')
+
         self.window['_num_ch'].update(client.channels)
         self.window['_offset'].update(client.portOffset)
 
@@ -80,17 +104,17 @@ class Interface():
         if event == '_change_active':
             if client.isActive:
                 client.kill_server_thread()
-                self.window['_change_active'].update('Enable')
+                self.window['_change_active'].update('Activate')
                 self.window['_change_active'].Update(button_color=('black', 'green'))
             else:
                 client.run_server_thread()
-                self.window['_change_active'].update('Disable')
+                self.window['_change_active'].update('Deactivate')
                 self.window['_change_active'].Update(button_color=('black', 'red'))
 
         if client.connectionQuality > 0.5:
-            self.window['_quality'].update('GOOD', text_color='yellow')
+            self.window['_quality'].update('Good', text_color='white')
         else:
-            self.window['_quality'].update('UNSTABLE', text_color='red')
+            self.window['_quality'].update('Unstable', text_color='red')
 
     def file_browser(self):
         filepath = sg.popup_get_file('Select session file')
@@ -99,6 +123,10 @@ class Interface():
     def folder_browser(self):
         filepath = sg.popup_get_folder('Select save directory')
         return filepath
+
+    def text_entry(self, win_title):
+        text = sg.popup_get_text(win_title)
+        return text
 
     # main GUI update loop
     def event_loop(self):
@@ -111,14 +139,8 @@ class Interface():
                 self.Session.deactivate_all()
                 break
 
-            if len(values['_client_listbox']) > 0:
-                clientName = values["_client_listbox"][0][2:]
-                
-                # if clientName != self.selectedClient: # check if selection changed
-                activeClient = self.Session.client_by_name(clientName)
-                    # self.selectedClient = clientName
-            else:
-                activeClient = None
+            # update main listbox, return activeClient and check if changed selection
+            activeClient, selectionChanged = self.update_client_listboxbox(values)
 
             if event == "_create":
                 self.Session.create_client(
@@ -136,18 +158,19 @@ class Interface():
 
                 if event == '_remove':
                     self.Session.delete_client(activeClient)
-                elif event == '_activate_all':
+                if event == '_activate_all':
                     self.Session.activate_all()
-                elif event == '_deactivate_all':
+                if event == '_deactivate_all':
                     self.Session.deactivate_all()
-                elif event == '_save_sess':
+                if event == '_save_sess':
                     self.Session.save_session(self.folder_browser())
+                if event == '_change_name':
+                    text = self.text_entry("Name Entry")
+                    activeClient.name = self.Session.crosscheck_name(text)
 
 
-                self.update_client_pane(activeClient, event)
+                self.update_client_pane(activeClient, event, selectionChanged)
             else:
                 self.display_empty_client()
-            self.update_client_listboxbox()
 
-            
         self.window.close()

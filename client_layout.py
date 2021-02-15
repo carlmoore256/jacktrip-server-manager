@@ -1,18 +1,19 @@
 import PySimpleGUI as sg
 
 title_col = [
-    [sg.Text("Name:", size=(12,1)),
+    [sg.Text("Name:", size=(14,1)),
     sg.Text(size=(15,1), key="-ACTIVE_NAME-")]
 ]
 
 client_viewer_contents = [
     # [sg.Column(title_col)],
-    [sg.Text('Status:'), sg.Text('NOT CONNECTED', key='_connect_status')],
-    [sg.Text('Quality:'), sg.Text('-', key='_quality')],
-    [sg.Text('Rating:'), sg.Text('-', size=(12,1), key='_quality_label')],
-    [sg.Text('Skew:'), sg.Text('-', key='_skew')],
-    [sg.Text('Port Offset:'), sg.Text('', key='_offset')],
-    [sg.Text('Channels:'), sg.Text('', key='_num_ch')],
+    [sg.Text('Status:'), sg.Text('Not Connected', key='_connect_status')],
+    [sg.Text('Quality:'), sg.Text('-', size=(30,1), auto_size_text=True, key='_quality')],
+    [sg.Text('Rating:'), sg.Text('-', size=(30,1), key='_quality_label')],
+    [sg.Text('Skew:'), sg.Text('-', size=(30,1), key='_skew')],
+    [sg.Text('Port Offset:'), sg.Text('', size=(30,1), key='_offset')],
+    [sg.Text('Channels:'), sg.Text('', size=(30,1), key='_num_ch')],
+    [sg.Button('Change Name', key="_change_name")],
     [sg.Button('Disable', key="_change_active", button_color=('black', 'red'))],
     [sg.Button('Remove', key="_remove")],
     #---------CONSOLE----------#
@@ -25,7 +26,7 @@ client_viewer_contents = [
 client_viewer_frame = [
     [sg.Frame('[Create or select a client]',
     layout=client_viewer_contents,
-    font='Any 12',
+    font='Any 14',
     key="_client_frame")]
 ]
 

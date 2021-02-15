@@ -1,6 +1,6 @@
 import subprocess
 from threading import Thread
-from joblib import Parallel, delayed
+# from joblib import Parallel, delayed
 import time
 
 class ClientPane():
@@ -22,23 +22,17 @@ class ClientPane():
         self.UDP_wait_count = 0
         self.skew = 0.0
 
-        # clientPane can request a server restart if autoManage is enabled
-        self.requestRestart = False
-
         print(f'setting up client {name} on port {4464 + portOffset}')
 
         # autoManage immediately runs server thread upon creation
         if autoManage:
             self.run_server_thread()
-            # self.interface.window['-CHANGE_ACTIVE-'].update(button_color=('black', 'green'))
-        # else:
-            # self.interface.window['-CHANGE_ACTIVE-'].update(button_color=('black', 'red'))
 
     def server_command(self):
         if self.isActive:
             self.kill_server_thread()
 
-        time.sleep(0.1)
+        #time.sleep(0.1)
 
         jtCommand = ["jacktrip", "-s",
             "--clientname", self.name, 
@@ -52,14 +46,12 @@ class ClientPane():
         if self.autoConnectAudio == False:
             jtCommand.append("--nojackportsconnect")
 
-        # self.server_thread = subprocess.Popen(["jacktrip", "-s",
-        #     "--clientname", self.name, "-n", str(self.channels),
-        #     "-o", str(self.portOffset), "--iostat", str(1), "--nojackportsconnect"],
-        #     stdout=subprocess.PIPE,)
-
         self.server_thread = subprocess.Popen(jtCommand, stdout=subprocess.PIPE)
         self.isActive = True
+        self.server_runtime()
 
+
+    def server_runtime(self):
         while True:
             output = self.server_thread.stdout.readline()
 
@@ -111,9 +103,9 @@ class ClientPane():
 
     # filter stdout from jt process
     def filter_events(self, output):
+        # in this case, will it say this if a client disconnects and reconnects?
         if not self.connectionActive and 'Received Connection from Peer' in output:
             self.connectionActive = True
-            # self.interface.update_client_listboxbox()
 
         if self.connectionActive:
             # determine if client has bad connection
@@ -137,17 +129,16 @@ class ClientPane():
 
 
     def run_server_thread(self):
-        self.requestRestart = False
         print('starting jacktrip server')
         print(f"RUN: jacktrip -s --clientname {self.name} -n {self.channels} -o {self.portOffset}")
-        x = Thread(target=self.server_command, daemon=True)
-        x.start()
+        t = Thread(target=self.server_command, daemon=True)
+        t.start()
 
     def read_server_thread(self):
         return self.currentOutput
 
     def kill_server_thread(self):
-        print(f'killing server thread {self.server_thread}')
+        print(f'killing server thread for {self.name}')
         self.server_thread.kill()
         self.isActive = False
         self.connectionActive = False
