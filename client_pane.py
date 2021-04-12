@@ -80,8 +80,10 @@ class ClientPane():
 
     def restart_server(self):
         print(f"Restarting {self.name} server")
+        self.connectionActive = False
+        self.connectionQuality = 1.0 # this could eventually roll over
         self.kill_server_thread()
-        time.sleep(0.1)
+        time.sleep(0.3)
         self.run_server_thread()
 
     def connection_behavior(self):
@@ -93,15 +95,7 @@ class ClientPane():
         # in event that quality drops below desired level, re-try connection
         if self.connectionQuality < 0.01:
             print(f'server terminating {self.name}, quality too low!')
-
-            if self.autoManage:
-                # self.requestRestart = True
-                self.connectionActive = False
-                self.connectionQuality = 1.0 # this could eventually roll over
-
-            self.kill_server_thread()
-            time.sleep(0.3)
-            self.run_server_thread()
+            self.restart_server()
 
     # representation of connection quality (work in progress)
     # this can determine their level in the mix (to be implemented later)
