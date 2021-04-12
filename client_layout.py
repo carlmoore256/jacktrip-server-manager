@@ -14,6 +14,7 @@ client_viewer_contents = [
     [sg.Text('Port Offset:'), sg.Text('', size=(30,1), key='_offset')],
     [sg.Text('Channels:'), sg.Text('', size=(30,1), key='_num_ch')],
     [sg.Button('Change Name', key="_change_name")],
+    [sg.Button('Change Port', key="_change_port")],
     [sg.Button('Disable', key="_change_active", button_color=('black', 'red'))],
     [sg.Button('Remove', key="_remove")],
     #---------CONSOLE----------#

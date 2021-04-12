@@ -128,6 +128,37 @@ class Interface():
         text = sg.popup_get_text(win_title)
         return text
 
+    def error_popup(self, title, header):
+        sg.popup_error(title, header)
+
+    def ok_cancel_popup(self, message):
+        result = sg.Popup(message, button_type=4)
+        return result
+
+    def port_change(self, port, client):
+
+        for digit in port:
+            if not digit.isdigit():
+                error_popup("Error", "Port entry contains strings, enter only digits")
+                return
+        else:
+            port = int(port)
+
+        if port in self.Session.used_ports():
+            client_using = self.Session.client_by_port(port)
+            if client_using == None:
+                client.change_port(port)
+                return
+
+            result = self.ok_cancel_popup(f"Port {port} already in use by {client_using.name}, \
+                                                 auto reassign port for {client_using.name}?")
+            if result == "Cancel":
+                print("RESULT IS CANCEL, RETURN ")
+                return
+            else:
+                client_using.change_port(self.Session.find_empty_port())
+                client.change_port(port)
+
     # main GUI update loop
     def event_loop(self):
 
@@ -167,6 +198,9 @@ class Interface():
                 if event == '_change_name':
                     text = self.text_entry("Name Entry")
                     activeClient.name = self.Session.crosscheck_name(text)
+                if event == '_change_port':
+                    port = self.text_entry("Enter a new port")
+                    self.port_change(port, activeClient)
 
 
                 self.update_client_pane(activeClient, event, selectionChanged)

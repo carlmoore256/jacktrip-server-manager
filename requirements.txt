@@ -1,1 +1,2 @@
 PySimpleGUI
+python3-tk

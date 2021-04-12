@@ -72,13 +72,23 @@ class Session():
                 client_labels.append(f"  {c.name}")
         return client_labels
 
+    # return the client by port
+    def client_by_port(self, port):
+        for c in self.clients:
+            if c.portOffset == port:
+                return c
+        return None
+
+    def used_ports(self):
+        return [c.portOffset for c in self.clients]
+
     # get the lowest number port offset not already in use
     def find_empty_port(self):
-        used_ports = [c.portOffset for c in self.clients]
         port = 0
-        while port in used_ports:
+        while port in self.used_ports():
             port += 1
         return port
+
 
     # find a new name if it already exists
     def crosscheck_name(self, name):

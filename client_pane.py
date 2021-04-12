@@ -1,6 +1,5 @@
 import subprocess
 from threading import Thread
-# from joblib import Parallel, delayed
 import time
 
 class ClientPane():
@@ -16,7 +15,7 @@ class ClientPane():
         self.isActive = False
         self.connectionActive = False
         self.connectionChanged = False
-        # self.requestRestart = False
+        self.requestRestart = False
         self.currentOutput = ''
 
         self.connectionQuality = 1.0 # overall quality 0-1
@@ -47,6 +46,8 @@ class ClientPane():
         if self.autoConnectAudio == False:
             jtCommand.append("--nojackportsconnect")
 
+        print(f"Running JT Server: {jtCommand}")
+
         self.server_thread = subprocess.Popen(jtCommand, stdout=subprocess.PIPE)
         self.isActive = True
         self.server_runtime()
@@ -71,6 +72,17 @@ class ClientPane():
                 #     self.interface.update_client_listboxbox()
 
         rc = self.server_thread.poll()
+
+    def change_port(self, port):
+        print(f"Changing {self.name} port to {port}")
+        self.portOffset = port
+        self.restart_server()
+
+    def restart_server(self):
+        print(f"Restarting {self.name} server")
+        self.kill_server_thread()
+        time.sleep(0.1)
+        self.run_server_thread()
 
     def connection_behavior(self):
         self.connectionQuality = self.calculate_quality()
@@ -133,7 +145,6 @@ class ClientPane():
 
     def run_server_thread(self):
         print('starting jacktrip server')
-        print(f"RUN: jacktrip -s --clientname {self.name} -n {self.channels} -o {self.portOffset}")
         t = Thread(target=self.server_command, daemon=True)
         t.start()
 
