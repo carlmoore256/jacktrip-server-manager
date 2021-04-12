@@ -139,7 +139,7 @@ class Interface():
 
         for digit in port:
             if not digit.isdigit():
-                error_popup("Error", "Port entry contains strings, enter only digits")
+                self.error_popup("Error", "Port entry contains strings, only digits allowed")
                 return
         else:
             port = int(port)
@@ -149,11 +149,9 @@ class Interface():
             if client_using == None:
                 client.change_port(port)
                 return
-
             result = self.ok_cancel_popup(f"Port {port} already in use by {client_using.name}, \
                                                  auto reassign port for {client_using.name}?")
             if result == "Cancel":
-                print("RESULT IS CANCEL, RETURN ")
                 return
             else:
                 client_using.change_port(self.Session.find_empty_port())
