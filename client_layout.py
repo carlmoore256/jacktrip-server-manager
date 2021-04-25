@@ -13,13 +13,21 @@ client_viewer_contents = [
     [sg.Text('Skew:'), sg.Text('-', size=(30,1), key='_skew')],
     [sg.Text('Port Offset:'), sg.Text('', size=(30,1), key='_offset')],
     [sg.Text('Channels:'), sg.Text('', size=(30,1), key='_num_ch')],
+    [sg.Checkbox('Auto-Manage Connection', default=True, key='_automan_client')],
     [sg.Button('Change Name', key="_change_name")],
     [sg.Button('Change Port', key="_change_port")],
-    [sg.Button('Disable', key="_change_active", button_color=('black', 'red'))],
+    [sg.Button('Deactivate', key="_change_active", button_color=('black', 'red'))],
     [sg.Button('Remove', key="_remove")],
+    #---------ROUTING----------#
+    [sg.Text('_'*44)],
+    [sg.Text('Audio Routed to Peers', size=(30,1))],
+    [sg.Listbox(values=[], enable_events=True, bind_return_key=True, size=(27, 8), 
+    font='ANY 14', key="_client_routing")],
     #---------CONSOLE----------#
     [sg.MLine(key='_console_scroll'+sg.WRITE_ONLY_KEY, size=(40,8), autoscroll=True)],
     [sg.Text(size=(40,1), key='_console_line')],
+
+
 ]
 
 # listbox has right_click_menu parameter, implement this

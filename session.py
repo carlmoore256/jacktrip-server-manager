@@ -101,7 +101,8 @@ class Session():
         return newName
 
     # create a new client in the session, portOffset auto assigned if None
-    def create_client(self, name, portOffset, channels, autoConnectAudio, zeroUnderrun, autoManage):
+    def create_client(self, name, portOffset, channels, autoConnectAudio, 
+                        zeroUnderrun, autoManage):
         # check if name is already in use
         if name in self.existing_names():
             name = self.crosscheck_name(name)
@@ -110,9 +111,18 @@ class Session():
         if portOffset is None:
             portOffset = self.find_empty_port()
 
+        connectedPeers = []
+        if autoConnectAudio:
+            connectedPeers = self.existing_names()
+
         # create the new client
-        newClient = ClientPane(name, portOffset, channels, autoConnectAudio, zeroUnderrun, autoManage)
+        newClient = ClientPane(name, portOffset, channels, autoConnectAudio,
+                                 zeroUnderrun, autoManage, connectedPeers)
         self.clients.append(newClient)
+
+        for c in self.clients:
+            if c.autoConnectAudio:
+                c.connectedPeers.append(newClient.name)
 
     def activate_all(self):
         for c in self.clients:

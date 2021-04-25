@@ -4,7 +4,14 @@ import time
 
 class ClientPane():
 
-    def __init__(self, name, portOffset, channels, autoConnectAudio, zeroUnderrun, autoManage):
+    def __init__(self, 
+                name, 
+                portOffset, 
+                channels, 
+                autoConnectAudio, 
+                zeroUnderrun, 
+                autoManage, 
+                connectedPeers=[]):
         self.name = name
         self.portOffset = portOffset
         self.channels = channels
@@ -21,6 +28,8 @@ class ClientPane():
         self.connectionQuality = 1.0 # overall quality 0-1
         self.UDP_wait_count = 0
         self.skew = 0.0
+
+        self.connectedPeers = connectedPeers
 
         print(f'setting up client {name} on port {4464 + portOffset}')
 
@@ -135,7 +144,6 @@ class ClientPane():
         idx = input.index(string)
         extracted_str = input[idx+str_len:idx+str_len+length]
         return extracted_str
-
 
     def run_server_thread(self):
         print('starting jacktrip server')

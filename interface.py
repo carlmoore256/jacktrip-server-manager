@@ -1,4 +1,5 @@
 import client_layout
+import signal_router
 
 import PySimpleGUI as sg
 import os.path
@@ -32,7 +33,11 @@ class Interface():
                 sg.Button('Deactivate all', key='_deactivate_all'), 
                 sg.Button('Save Session', key='_save_sess'),
                 sg.Button('Load Session', key='_load_sess'),
-                sg.Checkbox('AutoManage', default=True, key='_automanage')
+                # sg.Button('Route All Clients', key='_route_all'),
+            ],
+            [
+                sg.Checkbox('AutoManage', default=True, key='_automanage'),
+
             ],
         ]
         layout = [ # Full interface layout
@@ -91,11 +96,19 @@ class Interface():
 
         self.window['_num_ch'].update(client.channels)
         self.window['_offset'].update(client.portOffset)
+        self.window['_automan_client'].update(client.autoManage)
+
+        
+        self.window['_client_routing'].update(client.connectedPeers)
 
         if client.connectionActive:
             self.window['_connect_status'].update('Connected', text_color='white')
             self.window['_quality_label'].update('{:10.2f}'.format(client.connectionQuality))
             self.window['_skew'].update(str(client.skew))
+            if client.connectionQuality > 0.5:
+                self.window['_quality'].update('Good', text_color='white')
+            else:
+                self.window['_quality'].update('Unstable', text_color='red')
         else:
             self.window['_connect_status'].update('Not Connected', text_color='red')
             self.window['_quality'].update('-')
@@ -111,10 +124,11 @@ class Interface():
                 self.window['_change_active'].update('Deactivate')
                 self.window['_change_active'].Update(button_color=('black', 'red'))
 
-        if client.connectionQuality > 0.5:
-            self.window['_quality'].update('Good', text_color='white')
-        else:
-            self.window['_quality'].update('Unstable', text_color='red')
+
+
+
+    # def update_client_routing(self):
+
 
     def file_browser(self):
         filepath = sg.popup_get_file('Select session file')
@@ -199,6 +213,9 @@ class Interface():
                 if event == '_change_port':
                     port = self.text_entry("Enter a new port")
                     self.port_change(port, activeClient)
+                # if event == '_automan_client':
+                activeClient.autoManage = values['_automan_client']
+
 
 
                 self.update_client_pane(activeClient, event, selectionChanged)
